@@ -9,6 +9,7 @@ class AuthorStore {
   constructor() {
     this.authors = [];
     this.loading = true;
+    this.query = "";
   }
 
   fetchAuthors() {
@@ -38,6 +39,7 @@ class AuthorStore {
 decorate(AuthorStore, {
   authors: observable,
   loading: observable,
+  query: observable,
   filteredAuthors: computed
 });
 
