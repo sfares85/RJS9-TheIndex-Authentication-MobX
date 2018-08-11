@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-import axios from "axios";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import { observer } from "mobx-react";
 
 // Components
 import Sidebar from "./Sidebar";
@@ -9,53 +9,20 @@ import AuthorsList from "./AuthorsList";
 import AuthorDetail from "./AuthorDetail";
 import BookList from "./BookList";
 
-const instance = axios.create({
-  baseURL: "https://the-index-api.herokuapp.com"
-});
+// Store
+import authorStore from "./stores/AuthorStore";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      authors: [],
-      loading: true
-    };
-  }
-
-  fetchAllAuthors() {
-    return instance.get("/api/authors/").then(res => res.data);
-  }
-
-  fetchAllBooks() {
-    return instance.get("/api/books/").then(res => res.data);
-  }
-
-  componentDidMount() {
-    this.fetchAllAuthors()
-      .then(authors => this.setState({ authors: authors }))
-      .then(() => this.fetchAllBooks())
-      .then(books => this.setState({ books: books, loading: false }))
-      .catch(err => console.error(err));
-  }
-
   getView() {
-    if (this.state.loading) {
+    if (authorStore.loading) {
       return <Loading />;
     } else {
       return (
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/authors" />} />
           <Route path="/authors/:authorID" component={AuthorDetail} />
-          <Route
-            path="/authors/"
-            render={props => (
-              <AuthorsList {...props} authors={this.state.authors} />
-            )}
-          />
-          <Route
-            path="/books/:bookColor?"
-            render={props => <BookList {...props} books={this.state.books} />}
-          />
+          <Route path="/authors/" component={AuthorsList} />
+          <Route path="/books/:bookColor?" component={BookList} />
         </Switch>
       );
     }
@@ -66,7 +33,7 @@ class App extends Component {
       <div id="app" className="container-fluid">
         <div className="row">
           <div className="col-2">
-            <Sidebar unselectAuthor={this.unselectAuthor} />
+            <Sidebar />
           </div>
           <div className="content col-10">{this.getView()}</div>
         </div>
@@ -75,4 +42,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(observer(App));
