@@ -1,31 +1,40 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 // Components
+import Loading from "./Loading";
 import SearchBar from "./SearchBar";
 import BookTable from "./BookTable";
+
+const instance = axios.create({
+  baseURL: "https://the-index-api.herokuapp.com"
+});
 
 class BookList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      books: this.props.books,
-      filteredBooks: this.props.books
+      books: [],
+      loading: true
     };
-
-    this.filterBooks = this.filterBooks.bind(this);
   }
 
-  filterBooks(query) {
-    query = query.toLowerCase();
-    let filteredBooks = this.state.books.filter(book => {
-      return `${book.title}`.toLowerCase().includes(query);
-    });
-    this.setState({ filteredBooks });
+  componentDidMount() {
+    instance
+      .get("https://the-index-api.herokuapp.com/api/books/")
+      .then(res => res.data)
+      .then(books =>
+        this.setState({
+          books,
+          loading: false
+        })
+      )
+      .catch(err => console.error(err));
   }
 
   filterBooksByColor(bookColor) {
-    return this.state.filteredBooks.filter(book => book.color === bookColor);
+    return this.state.books.filter(book => book.color === bookColor);
   }
 
   render() {
@@ -34,7 +43,7 @@ class BookList extends Component {
     let allBooksButton;
 
     if (!bookColor) {
-      books = this.state.filteredBooks;
+      books = this.state.books;
     } else {
       books = this.filterBooksByColor(bookColor);
       allBooksButton = (
@@ -44,10 +53,12 @@ class BookList extends Component {
       );
     }
 
-    return (
+    return this.state.loading ? (
+      <Loading />
+    ) : (
       <div className="books">
         <h3>Books</h3>
-        <SearchBar changeHandler={this.filterBooks} />
+        <SearchBar store={{}} />
         {allBooksButton}
         <BookTable books={books} />
       </div>
