@@ -9,8 +9,17 @@ class BookRow extends Component {
         <Link to={`/authors/${author.id}`}>{author.name}</Link>
       </div>
     ));
+    const availableButton = (
+      <button
+        className={`btn btn-${book.available ? "success" : "danger"}`}
+        onClick={() => alert("You need to make me work work work work work")}
+      >
+        {book.available ? "borrow" : "return"}
+      </button>
+    );
     return (
       <tr>
+        <td>{availableButton}</td>
         <td>{book.title}</td>
         <td>{authors}</td>
         <td>

@@ -11,6 +11,7 @@ class BookTable extends Component {
       <table className="mt-3 table">
         <thead>
           <tr>
+            <th />
             <th>Name</th>
             <th>Authors</th>
             <th>Color</th>
