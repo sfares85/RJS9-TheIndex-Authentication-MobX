@@ -12,7 +12,9 @@ class BookRow extends Component {
     const availableButton = (
       <button
         className={`btn btn-${book.available ? "success" : "danger"}`}
-        onClick={() => alert("You need to make me work work work work work")}
+        onClick={() =>
+          alert("You need to make me 🎵 work work work work work 🎵")
+        }
       >
         {book.available ? "borrow" : "return"}
       </button>
