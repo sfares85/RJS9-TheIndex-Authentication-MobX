@@ -23,16 +23,17 @@ class BookStore {
       .catch(error => console.error(error));
   }
 
-  addBook(newBook, authorID) {
+  addBook(newBook, author) {
     newBook = {
       ...newBook,
-      authors: [authorID]
+      authors: [author.id]
     };
     instance
       .post("/api/books/", newBook)
       .then(res => res.data)
       .then(book => {
         this.books.push(book);
+        author.books.push(book.id);
         this.statusMessage = "Success";
       })
       .catch(error => (this.statusMessage = error.response));
@@ -40,7 +41,7 @@ class BookStore {
 
   get filteredBooks() {
     return this.books.filter(book => {
-      return book.title.toLowerCase().includes(this.query);
+      return book.title.toLowerCase().includes(this.query.toLowerCase());
     });
   }
 

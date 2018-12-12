@@ -29,7 +29,7 @@ class AuthorStore {
       .post("/api/authors/", newAuthor)
       .then(res => res.data)
       .then(author => {
-        this.authors.push(author);
+        this.authors.unshift(author);
         this.statusMessage = "Success";
       })
       .catch(err => (this.statusMessage = err.response));
@@ -39,7 +39,7 @@ class AuthorStore {
     return this.authors.filter(author =>
       `${author.first_name} ${author.last_name}`
         .toLowerCase()
-        .includes(this.query)
+        .includes(this.query.toLowerCase())
     );
   }
 
