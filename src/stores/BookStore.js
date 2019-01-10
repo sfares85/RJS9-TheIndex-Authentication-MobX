@@ -21,10 +21,7 @@ class BookStore {
   };
 
   addBook = async (newBook, author) => {
-    newBook = {
-      ...newBook,
-      authors: [author.id]
-    };
+    newBook.authors = [author.id];
     try {
       const res = await instance.post("/api/books/", newBook);
       const book = res.data;
