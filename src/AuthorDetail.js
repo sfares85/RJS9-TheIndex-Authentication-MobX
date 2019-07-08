@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 
 // Components
@@ -9,27 +9,25 @@ import AddBookModal from "./AddBookModal";
 import authorStore from "./stores/AuthorStore";
 import bookStore from "./stores/BookStore";
 
-class AuthorDetail extends Component {
-  render() {
-    const authorID = this.props.match.params.authorID;
-    const author = authorStore.getAuthorById(authorID);
-    const books = author.books.map(bookID => bookStore.getBookById(bookID));
+const AuthorDetail = props => {
+  const authorID = props.match.params.authorID;
+  const author = authorStore.getAuthorById(authorID);
+  const books = author.books.map(bookID => bookStore.getBookById(bookID));
 
-    return (
-      <div className="author">
-        <div>
-          <h3>{author.first_name + " " + author.last_name}</h3>
-          <img
-            src={author.imageUrl}
-            className="img-thumbnail img-fluid"
-            alt={author.first_name + " " + author.last_name}
-          />
-        </div>
-        <BookTable books={books} />
-        <AddBookModal author={author} />
+  return (
+    <div className="author">
+      <div>
+        <h3>{author.first_name + " " + author.last_name}</h3>
+        <img
+          src={author.imageUrl}
+          className="img-thumbnail img-fluid"
+          alt={author.first_name + " " + author.last_name}
+        />
       </div>
-    );
-  }
-}
+      <BookTable books={books} />
+      <AddBookModal author={author} />
+    </div>
+  );
+};
 
 export default observer(AuthorDetail);

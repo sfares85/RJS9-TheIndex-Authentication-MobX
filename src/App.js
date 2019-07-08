@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { observer } from "mobx-react";
 
@@ -13,8 +13,8 @@ import BookList from "./BookList";
 import authorStore from "./stores/AuthorStore";
 import bookStore from "./stores/BookStore";
 
-class App extends Component {
-  getView() {
+function App() {
+  const getView = () => {
     if (authorStore.loading || bookStore.loading) {
       return <Loading />;
     } else {
@@ -27,20 +27,18 @@ class App extends Component {
         </Switch>
       );
     }
-  }
+  };
 
-  render() {
-    return (
-      <div id="app" className="container-fluid">
-        <div className="row">
-          <div className="col-2">
-            <Sidebar />
-          </div>
-          <div className="content col-10">{this.getView()}</div>
+  return (
+    <div id="app" className="container-fluid">
+      <div className="row">
+        <div className="col-2">
+          <Sidebar />
         </div>
+        <div className="content col-10">{getView()}</div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default withRouter(observer(App));
