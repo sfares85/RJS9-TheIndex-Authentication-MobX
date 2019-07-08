@@ -6,34 +6,30 @@ const instance = axios.create({
 });
 
 class AuthorStore {
-  constructor() {
-    this.authors = [];
-    this.loading = true;
-    this.query = "";
-    this.statusMessage = "";
-  }
+  authors = [];
+  loading = true;
+  query = "";
+  statusMessage = "";
 
-  fetchAuthors() {
-    return instance
-      .get("/api/authors/")
-      .then(res => res.data)
-      .then(authors => {
-        this.authors = authors;
-        this.loading = false;
-      })
-      .catch(err => console.error(err.response));
-  }
+  fetchAuthors = async () => {
+    try {
+      const res = await instance.get("/api/authors/");
+      this.authors = res.data;
+      this.loading = false;
+    } catch (err) {
+      console.error(err.response);
+    }
+  };
 
-  addAuthor(newAuthor) {
-    instance
-      .post("/api/authors/", newAuthor)
-      .then(res => res.data)
-      .then(author => {
-        this.authors.unshift(author);
-        this.statusMessage = "Success";
-      })
-      .catch(err => (this.statusMessage = err.response));
-  }
+  addAuthor = async newAuthor => {
+    try {
+      const res = await instance.post("/api/authors/", newAuthor);
+      this.authors.unshift(res.data);
+      this.statusMessage = "Success";
+    } catch (err) {
+      this.statusMessage = err.response;
+    }
+  };
 
   get filteredAuthors() {
     return this.authors.filter(author =>
@@ -43,9 +39,9 @@ class AuthorStore {
     );
   }
 
-  getAuthorById(id) {
+  getAuthorById = id => {
     return this.authors.find(author => +author.id === +id);
-  }
+  };
 }
 
 decorate(AuthorStore, {

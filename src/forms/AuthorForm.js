@@ -3,27 +3,22 @@ import React, { Component } from "react";
 import authorStore from "../stores/AuthorStore";
 
 class AuthorForm extends Component {
-  constructor() {
-    super();
-    this.state = {
-      first_name: "",
-      last_name: "",
-      imageUrl: "",
-      books: []
-    };
-    this.onTextChange = this.onTextChange.bind(this);
-    this.submitAuthor = this.submitAuthor.bind(this);
-  }
+  state = {
+    first_name: "",
+    last_name: "",
+    imageUrl: "",
+    books: []
+  };
 
-  onTextChange(event) {
+  onTextChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-  }
+  };
 
-  submitAuthor(event) {
+  submitAuthor = event => {
     event.preventDefault();
     authorStore.addAuthor(this.state);
     this.props.closeModal();
-  }
+  };
 
   render() {
     return (

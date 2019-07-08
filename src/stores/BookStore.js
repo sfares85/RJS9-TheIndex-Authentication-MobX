@@ -6,38 +6,35 @@ const instance = axios.create({
 });
 
 class BookStore {
-  constructor() {
-    this.books = [];
-    this.query = "";
-    this.loading = true;
-  }
+  books = [];
+  query = "";
+  loading = true;
 
-  fetchBooks() {
-    return instance
-      .get("https://the-index-api.herokuapp.com/api/books/")
-      .then(res => res.data)
-      .then(books => {
-        this.books = books;
-        this.loading = false;
-      })
-      .catch(error => console.error(error));
-  }
+  fetchBooks = async () => {
+    try {
+      const res = await instance.get("/api/books/");
+      this.books = res.data;
+      this.loading = false;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  addBook(newBook, author) {
+  addBook = async (newBook, author) => {
     newBook = {
       ...newBook,
       authors: [author.id]
     };
-    instance
-      .post("/api/books/", newBook)
-      .then(res => res.data)
-      .then(book => {
-        this.books.push(book);
-        author.books.push(book.id);
-        this.statusMessage = "Success";
-      })
-      .catch(error => (this.statusMessage = error.response));
-  }
+    try {
+      const res = await instance.post("/api/books/", newBook);
+      const book = res.data;
+      this.books.push(book);
+      author.books.push(book.id);
+      this.statusMessage = "Success";
+    } catch (error) {
+      this.statusMessage = error.response;
+    }
+  };
 
   get filteredBooks() {
     return this.books.filter(book => {
@@ -45,13 +42,13 @@ class BookStore {
     });
   }
 
-  getBookById(id) {
+  getBookById = id => {
     return this.books.find(book => +book.id === +id);
-  }
+  };
 
-  getBooksByColor(color) {
+  getBooksByColor = color => {
     return this.filteredBooks.filter(book => book.color === color);
-  }
+  };
 }
 
 decorate(BookStore, {
