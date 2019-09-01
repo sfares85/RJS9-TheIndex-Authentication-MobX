@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import AuthorCard from "./AuthorCard";
 import SearchBar from "./SearchBar";
 import AddAuthorCard from "./AddAuthorCard";
+import authStore from "./stores/authStore";
 
 // Store
 import authorStore from "./stores/AuthorStore";
@@ -18,10 +19,12 @@ const AuthorsList = () => {
     <div className="authors">
       <h3>Authors</h3>
       <SearchBar store={authorStore} />
-      <div className="row">
-        <AddAuthorCard />
-        {authorCards}
-      </div>
+      {authStore.user && (
+        <div className="row">
+          <AddAuthorCard />
+        </div>
+      )}
+      <div className="row">{authorCards}</div>
     </div>
   );
 };
